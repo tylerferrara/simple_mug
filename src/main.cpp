@@ -6,8 +6,8 @@ constexpr uint ONBOARD_LED = 25;
 constexpr uint LED_PIN_RED = 2;
 constexpr uint LED_PIN_GREEN = 13;
 constexpr uint LED_PIN_BLUE = 20;
-constexpr uint BTN_PIN = 3;
-constexpr uint HEATER_PIN = 18;
+constexpr uint BTN_PIN = 16;
+constexpr uint HEATER_PIN = 15;
 constexpr uint ALIVE_INTERVAL_SEC = 2;
 
 /****** Program State ******/
@@ -35,7 +35,7 @@ void setup_leds() {
 void setup_btns() {
   gpio_init(BTN_PIN);
   gpio_set_dir(BTN_PIN, GPIO_IN);
-  gpio_pull_down(BTN_PIN);
+  gpio_pull_up(BTN_PIN);
 }
 
 void setup_heater() {
@@ -68,15 +68,13 @@ int main() {
     if (gpio_get(BTN_PIN)) {
       if (!btn_down) {
         heater_active = !heater_active;
-        gpio_put(LED_PIN_RED, heater_active ? 1 : 0);
+        gpio_put(ONBOARD_LED, heater_active ? 1 : 0);
         gpio_put(HEATER_PIN, heater_active ? 1 : 0);
       }
       btn_down = true;
     } else if (btn_down) {
       btn_down = false;
     }
-
-    handle_onboard_led();
   }
 }
 
